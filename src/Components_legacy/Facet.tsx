@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import './Facet.css';
 import {Divider, ListItem, ListItemText, Typography} from '@mui/material';
-import EngineContext from '../common/engineContext';
+import EngineContext from '../common/engineContext_legacy';
 
 interface FacetProps {
   title: string;

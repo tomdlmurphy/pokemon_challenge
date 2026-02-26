@@ -8,7 +8,7 @@ import {
   buildResultsPerPage,
   ResultsPerPage as HeadlessResultsPerPage,
 } from '@coveo/headless';
-import EngineContext from '../common/engineContext';
+import EngineContext from '../common/engineContext_legacy';
 
 interface ResultsPerPageProps {
   options: number[];

@@ -1,51 +1,25 @@
-import {FunctionComponent, useEffect, useState, useContext} from 'react';
-import {Pagination} from '@mui/material';
-import {buildPager, Pager as HeadlessPager} from '@coveo/headless';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import EngineContext from '../common/engineContext';
+import React, {useState} from 'react';
 
-interface PagerProps {
-  controller: HeadlessPager;
-}
-
-const PagerRenderer: FunctionComponent<PagerProps> = (props) => {
-  const {controller} = props;
-  const [state, setState] = useState(controller.state);
-
-  useEffect(
-    () =>
-      controller.subscribe(() =>
-        setTimeout(() => setState(controller.state), 0)
-      ),
-    [controller]
-  );
-
-  const setPage = (pageNumber: number) => {
-    controller.selectPage(pageNumber);
-  };
+const Pager: React.FC = () => {
+  const [activePage, setActivePage] = useState(1);
 
   return (
-    <Box>
-      <Typography gutterBottom>Current page</Typography>
-      <Pagination
-        page={state.currentPage}
-        count={state.maxPage}
-        onChange={(e, page) => setPage(page)}
-        shape="rounded"
-        size="small"
-      />
-    </Box>
+    <div className="pagination">
+      <button className="page-btn wide">← Prev</button>
+      {[1, 2, 3, 4].map((page) => (
+        <button
+          key={page}
+          className={`page-btn${activePage === page ? ' active' : ''}`}
+          onClick={() => setActivePage(page)}
+        >
+          {page}
+        </button>
+      ))}
+      <span style={{color: 'var(--text-muted)', fontSize: '.8rem'}}>…</span>
+      <button className="page-btn">25</button>
+      <button className="page-btn wide">Next →</button>
+    </div>
   );
-};
-
-const Pager = () => {
-  const engine = useContext(EngineContext)!;
-  const controller = buildPager(engine, {
-    options: {numberOfPages: 3},
-  });
-
-  return <PagerRenderer controller={controller} />;
 };
 
 export default Pager;

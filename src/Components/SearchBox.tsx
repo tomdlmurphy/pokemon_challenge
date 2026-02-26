@@ -1,50 +1,62 @@
-import {FunctionComponent, useEffect, useState, useContext} from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import {
-  buildSearchBox,
-  SearchBox as HeadlessSearchBox,
-  SearchBoxOptions,
-} from '@coveo/headless';
-import EngineContext from '../common/engineContext';
+import React, {useState} from 'react';
 
-interface SearchBoxProps {
-  controller: HeadlessSearchBox;
-}
+const FILTER_CHIPS = [
+  {label: 'All',      filter: 'all',     count: 247},
+  {label: 'Docs',     filter: 'docs',    count: 104},
+  {label: 'Guides',   filter: 'guide',   count: 58},
+  {label: 'Articles', filter: 'article', count: 73},
+  {label: 'API Ref',  filter: 'api',     count: 12},
+];
 
-const SearchBoxRenderer: FunctionComponent<SearchBoxProps> = (props) => {
-  const {controller} = props;
-  const [state, setState] = useState(controller.state);
-
-  useEffect(
-    () => controller.subscribe(() => setState(controller.state)),
-    [controller]
-  );
+const SearchBox: React.FC = () => {
+  const [query, setQuery]             = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   return (
-    <Autocomplete
-      inputValue={state.value}
-      onInputChange={(_, newInputValue) => {
-        controller.updateText(newInputValue);
-      }}
-      onChange={() => {
-        controller.submit();
-      }}
-      options={state.suggestions.map((suggestion) => suggestion.rawValue)}
-      freeSolo
-      style={{width: 'auto'}}
-      renderInput={(params) => (
-        <TextField {...params} placeholder="Search" size="small" />
-      )}
-    />
-  );
-};
+    <header className="header">
+      <div className="header-top">
+        <h1 className="header-title">Search</h1>
+        <span className="header-meta">Coveo · Pokémon Challenge</span>
+      </div>
 
-const SearchBox = () => {
-  const options: SearchBoxOptions = {numberOfSuggestions: 8};
-  const engine = useContext(EngineContext)!;
-  const controller = buildSearchBox(engine, {options});
-  return <SearchBoxRenderer controller={controller} />;
+      <div className="search-wrap">
+        <span className="search-icon">🔍</span>
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search documentation, articles, guides…"
+          autoComplete="off"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        {query && (
+          <button
+            className="search-clear"
+            style={{display: 'block'}}
+            onClick={() => setQuery('')}
+            title="Clear search"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Filter chips */}
+      <div className="filter-row">
+        <span className="filter-label">Show:</span>
+        {FILTER_CHIPS.map((chip) => (
+          <div
+            key={chip.filter}
+            className={`chip${activeFilter === chip.filter ? ' active' : ''}`}
+            onClick={() => setActiveFilter(chip.filter)}
+          >
+            {chip.label}
+            <span className="chip-count">{chip.count}</span>
+          </div>
+        ))}
+      </div>
+    </header>
+  );
 };
 
 export default SearchBox;

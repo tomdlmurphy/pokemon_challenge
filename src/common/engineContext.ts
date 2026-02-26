@@ -1,8 +1,13 @@
+import {createContext, useContext} from 'react';
 import {SearchEngine} from '@coveo/headless';
-import {createContext} from 'react';
 
-const EngineContext = createContext<SearchEngine | null>(null);
-
+export const EngineContext = createContext<SearchEngine | null>(null);
 export const EngineProvider = EngineContext.Provider;
 
-export default EngineContext;
+export const useEngine = (): SearchEngine => {
+  const engine = useContext(EngineContext);
+  if (!engine) {
+    throw new Error('useEngine must be used within an EngineProvider');
+  }
+  return engine;
+};
