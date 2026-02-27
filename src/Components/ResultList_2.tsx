@@ -2,6 +2,34 @@ import React, {useEffect, useState} from 'react';
 import {buildResultList, Result} from '@coveo/headless';
 import {useEngine} from '../common/engineContext';
 
+// ── Type Colors ────────────────────────────────────────────
+
+const TYPE_COLORS: Record<string, {bg: string; color: string}> = {
+  normal:   {bg: '#A8A77A', color: '#fff'},
+  fire:     {bg: '#EE8130', color: '#fff'},
+  water:    {bg: '#6390F0', color: '#fff'},
+  electric: {bg: '#F7D02C', color: '#333'},
+  grass:    {bg: '#7AC74C', color: '#fff'},
+  ice:      {bg: '#96D9D6', color: '#333'},
+  fighting: {bg: '#C22E28', color: '#fff'},
+  poison:   {bg: '#A33EA1', color: '#fff'},
+  ground:   {bg: '#E2BF65', color: '#333'},
+  flying:   {bg: '#A98FF3', color: '#fff'},
+  psychic:  {bg: '#F95587', color: '#fff'},
+  bug:      {bg: '#A6B91A', color: '#fff'},
+  rock:     {bg: '#B6A136', color: '#fff'},
+  ghost:    {bg: '#735797', color: '#fff'},
+  dragon:   {bg: '#6F35FC', color: '#fff'},
+  dark:     {bg: '#705746', color: '#fff'},
+  steel:    {bg: '#B7B7CE', color: '#333'},
+  fairy:    {bg: '#D685AD', color: '#fff'},
+};
+
+const getTypeStyle = (type: string): {bg: string; color: string} => {
+  const key = type.toLowerCase();
+  return TYPE_COLORS[key] || {bg: '#777', color: '#fff'};
+};
+
 // ── Result Card ────────────────────────────────────────────
 
 const ResultCard: React.FC<{result: Result}> = ({result}) => {
@@ -15,8 +43,8 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
     pokemonTypes = [rawType];
   }
 
-  const pokemonImage = result.raw.pokemon_image as string | undefined;
-  const pokemonGeneration   = result.raw.pokemon_generation as string | undefined;
+  const pokemonImage      = result.raw.pokemon_image as string | undefined;
+  const pokemonGeneration = result.raw.pokemon_generation as string | undefined;
     const date = result.raw.date
         ? new Date(result.raw.date as unknown as number).toLocaleDateString('en-US', {
             year: 'numeric', month: 'short', day: 'numeric',
@@ -53,11 +81,28 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
       <div className="result-url">{result.printableUri}</div>
       <div className="result-excerpt">{result.excerpt}</div>
       <div className="result-footer">
-          {pokemonTypes.map((type) => (
-            <span key={type} className="result-meta-item">{type}</span>
-          ))}
+          {pokemonTypes.map((type) => {
+            const typeStyle = getTypeStyle(type);
+            return (
+              <span
+                key={type}
+                style={{
+                  background: typeStyle.bg,
+                  color: typeStyle.color,
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                  padding: '3px 9px',
+                  borderRadius: '4px',
+                }}
+              >
+                {type}
+              </span>
+            );
+          })}
           {pokemonGeneration && (
-            <span className="result-meta-item">Gen {pokemonGeneration}</span>
+            <span className="result-meta-item">{pokemonGeneration}</span>
           )}
           {date && (
             <span className="result-meta-item">{date}</span>
