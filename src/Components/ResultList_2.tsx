@@ -7,7 +7,7 @@ import {useEngine} from '../common/engineContext';
 const ResultCard: React.FC<{result: Result}> = ({result}) => {
   const pokemonImage = result.raw.pokemon_image as string | undefined;
   const pokemonType  = result.raw.pokemon_type as string | undefined;
-  const generation   = result.raw.generation as string | undefined;
+  const pokemonGeneration   = result.raw.pokemon_generation as string | undefined;
     const date = result.raw.date
         ? new Date(result.raw.date as unknown as number).toLocaleDateString('en-US', {
             year: 'numeric', month: 'short', day: 'numeric',
@@ -47,8 +47,8 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
           {pokemonType && (
             <span className="result-meta-item">{pokemonType}</span>
           )}
-          {generation && (
-            <span className="result-meta-item">Gen {generation}</span>
+          {pokemonGeneration && (
+            <span className="result-meta-item">Gen {pokemonGeneration}</span>
           )}
           {date && (
             <span className="result-meta-item">{date}</span>

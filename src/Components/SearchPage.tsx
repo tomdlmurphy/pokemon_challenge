@@ -3,7 +3,7 @@ import {SearchEngine} from '@coveo/headless';
 import {EngineProvider} from '../common/engineContext';
 import Sidebar from './Sidebar';
 import SearchBox from './SearchBox_2';
-import FacetList from './FacetList';
+import FacetList from './FacetList_2';
 import QuerySummary from './QuerySummary_2';
 import Sort from './Sort_2';
 import ResultList from './ResultList_2';
