@@ -5,28 +5,62 @@ import {useEngine} from '../common/engineContext';
 // ── Result Card ────────────────────────────────────────────
 
 const ResultCard: React.FC<{result: Result}> = ({result}) => {
-  const tag = (result.raw.filetype as string) ?? 'docs';
+  const pokemonImage = result.raw.pokemon_image as string | undefined;
+  const pokemonType  = result.raw.pokemon_type as string | undefined;
+  const generation   = result.raw.generation as string | undefined;
     const date = result.raw.date
         ? new Date(result.raw.date as unknown as number).toLocaleDateString('en-US', {
             year: 'numeric', month: 'short', day: 'numeric',
         })
-        : 'Unknown date';
+    : null;
 
   return (
-    <div className="result-card">
-      <span className="result-tag docs">{tag}</span>
+    <div className="result-card" style={{display: 'flex', gap: '16px', alignItems: 'flex-start'}}>
+
+      {/* Pokemon image */}
+      {pokemonImage && (
+        <div style={{
+          width: '90px',
+          height: '90px',
+          flexShrink: 0,
+          background: '#f0f4ff',
+          borderRadius: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}>
+          <img
+            src={pokemonImage}
+            alt={result.title}
+            style={{width: '80px', height: '80px', objectFit: 'contain'}}
+          />
+        </div>
+      )}
+
+      {/* Card content */}
+      <div style={{flex: 1, minWidth: 0}}>
       <div className="result-title">{result.title}</div>
       <div className="result-url">{result.printableUri}</div>
       <div className="result-excerpt">{result.excerpt}</div>
       <div className="result-footer">
-        <span className="result-meta-item">📁 {result.raw.source as string}</span>
-        <span className="result-meta-item">🕐 {date}</span>
+          {pokemonType && (
+            <span className="result-meta-item">{pokemonType}</span>
+          )}
+          {generation && (
+            <span className="result-meta-item">Gen {generation}</span>
+          )}
+          {date && (
+            <span className="result-meta-item">{date}</span>
+          )}
         <div className="result-actions">
           <button className="result-btn" onClick={() => window.open(result.uri, '_blank')}>
-            Open ↗
+              Open
           </button>
         </div>
       </div>
+      </div>
+
     </div>
   );
 };
