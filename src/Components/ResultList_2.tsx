@@ -71,7 +71,11 @@ const ResultList: React.FC = () => {
   const engine = useEngine();
 
   // Build the controller once
-  const [controller] = useState(() => buildResultList(engine));
+  const [controller] = useState(() => buildResultList(engine, {
+    options: {
+      fieldsToInclude: ['pokemon_image', 'pokemon_type', 'pokemon_generation']
+    }
+  }));
 
   // Keep a local copy of the controller's state so React re-renders on updates
   const [resultState, setResultState] = useState(controller.state);
