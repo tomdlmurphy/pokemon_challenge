@@ -5,8 +5,17 @@ import {useEngine} from '../common/engineContext';
 // ── Result Card ────────────────────────────────────────────
 
 const ResultCard: React.FC<{result: Result}> = ({result}) => {
+  let pokemonTypes: string[] = [];
+  const rawType = result.raw.pokemon_type;
+
+  if (Array.isArray(rawType)) {
+    const deduped = new Set(rawType as string[]);
+    pokemonTypes = Array.from(deduped);
+  } else if (typeof rawType === 'string') {
+    pokemonTypes = [rawType];
+  }
+
   const pokemonImage = result.raw.pokemon_image as string | undefined;
-  const pokemonType  = result.raw.pokemon_type as string | undefined;
   const pokemonGeneration   = result.raw.pokemon_generation as string | undefined;
     const date = result.raw.date
         ? new Date(result.raw.date as unknown as number).toLocaleDateString('en-US', {
@@ -44,9 +53,9 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
       <div className="result-url">{result.printableUri}</div>
       <div className="result-excerpt">{result.excerpt}</div>
       <div className="result-footer">
-          {pokemonType && (
-            <span className="result-meta-item">{pokemonType}</span>
-          )}
+          {pokemonTypes.map((type) => (
+            <span key={type} className="result-meta-item">{type}</span>
+          ))}
           {pokemonGeneration && (
             <span className="result-meta-item">Gen {pokemonGeneration}</span>
           )}
