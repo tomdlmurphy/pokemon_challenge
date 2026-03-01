@@ -8,6 +8,7 @@ import QuerySummary from './QuerySummary_2';
 import Sort from './Sort_2';
 import ResultList from './ResultList_2';
 import Pager from './Pager_2';
+import GeneratedAnswer from './GeneratedAnswer';
 import './SearchPage.css';
 
 interface ISearchPageProps {
@@ -38,6 +39,7 @@ const SearchPage: React.FunctionComponent<ISearchPageProps> = (props) => {
                 <QuerySummary />
                 <Sort />
               </div>
+              <GeneratedAnswer engine={engine} />
               <ResultList />
               <Pager />
             </section>
