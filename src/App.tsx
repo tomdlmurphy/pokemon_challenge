@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import SearchPage from './Components/SearchPage';
-import PokemonDetailPage from './Components/PokemonDetailPage';
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,7 +23,6 @@ export default function App() {
         />
         <Route path="/home" element={<Home />} />
         <Route path="/error" element={<Error />} />
-        <Route path="/pokemon/:name" element={<PokemonDetailPage />} />
       </Routes>
     </Router>
   );
