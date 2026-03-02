@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {buildResultList, Result} from '@coveo/headless';
 import {useEngine} from '../common/engineContext';
+import {useNavigate} from 'react-router-dom';
 
 // ── Type Colors ────────────────────────────────────────────
 
@@ -33,6 +34,8 @@ const getTypeStyle = (type: string): {bg: string; color: string} => {
 // ── Result Card ────────────────────────────────────────────
 
 const ResultCard: React.FC<{result: Result}> = ({result}) => {
+  const navigate = useNavigate();
+
   let pokemonTypes: string[] = [];
   const rawType = result.raw.pokemon_type;
 
@@ -51,12 +54,21 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
         })
     : null;
 
+  // Navigate to detail page, passing the full result as router state
+  const handleViewDetails = () => {
+    navigate('/pokemon/' + encodeURIComponent(result.title), {
+      state: {result},
+    });
+  };
+
   return (
     <div className="result-card" style={{display: 'flex', gap: '16px', alignItems: 'flex-start'}}>
 
       {/* Pokemon image */}
       {pokemonImage && (
-        <div style={{
+        <div
+          onClick={handleViewDetails}
+          style={{
           width: '90px',
           height: '90px',
           flexShrink: 0,
@@ -66,7 +78,9 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-        }}>
+            cursor: 'pointer',
+          }}
+        >
           <img
             src={pokemonImage}
             alt={result.title}
@@ -77,7 +91,13 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
 
       {/* Card content */}
       <div style={{flex: 1, minWidth: 0}}>
-      <div className="result-title">{result.title}</div>
+        <div
+          className="result-title"
+          style={{cursor: 'pointer'}}
+          onClick={handleViewDetails}
+        >
+          {result.title}
+        </div>
       <div className="result-url">{result.printableUri}</div>
       <div className="result-excerpt">{result.excerpt}</div>
       <div className="result-footer">
@@ -108,6 +128,9 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
             <span className="result-meta-item">{date}</span>
           )}
         <div className="result-actions">
+            <button className="result-btn" onClick={handleViewDetails}>
+              View Details
+            </button>
           <button className="result-btn" onClick={() => window.open(result.uri, '_blank')}>
               Open
           </button>
