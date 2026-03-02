@@ -181,7 +181,7 @@ const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({result, onClose}
             )}
 
             
-              href={result.uri}
+            <a href={result.uri}
               target="_blank"
               rel="noreferrer"
               style={{fontSize: '0.8rem', color: '#888', wordBreak: 'break-all'}}
