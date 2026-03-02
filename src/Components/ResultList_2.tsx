@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {buildResultList, Result} from '@coveo/headless';
 import {useEngine} from '../common/engineContext';
-import {useNavigate} from 'react-router-dom';
 
 // ── Type Colors ────────────────────────────────────────────
 
@@ -33,8 +32,7 @@ const getTypeStyle = (type: string): {bg: string; color: string} => {
 
 // ── Result Card ────────────────────────────────────────────
 
-const ResultCard: React.FC<{result: Result}> = ({result}) => {
-  const navigate = useNavigate();
+const ResultCard: React.FC<{result: Result; onSelect: (result: Result) => void}> = ({result, onSelect}) => {
 
   let pokemonTypes: string[] = [];
   const rawType = result.raw.pokemon_type;
@@ -54,20 +52,13 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
         })
     : null;
 
-  // Navigate to detail page, passing the full result as router state
-  const handleViewDetails = () => {
-    navigate('/pokemon/' + encodeURIComponent(result.title), {
-      state: {result},
-    });
-  };
-
   return (
     <div className="result-card" style={{display: 'flex', gap: '16px', alignItems: 'flex-start'}}>
 
       {/* Pokemon image */}
       {pokemonImage && (
         <div
-          onClick={handleViewDetails}
+          onClick={() => onSelect(result)}
           style={{
           width: '90px',
           height: '90px',
@@ -94,7 +85,7 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
         <div
           className="result-title"
           style={{cursor: 'pointer'}}
-          onClick={handleViewDetails}
+          onClick={() => onSelect(result)}
         >
           {result.title}
         </div>
@@ -104,9 +95,7 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
           {pokemonTypes.map((type) => {
             const typeStyle = getTypeStyle(type);
             return (
-              <span
-                key={type}
-                style={{
+              <span key={type} style={{
                   background: typeStyle.bg,
                   color: typeStyle.color,
                   fontSize: '0.68rem',
@@ -115,8 +104,7 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
                   textTransform: 'uppercase',
                   padding: '3px 9px',
                   borderRadius: '4px',
-                }}
-              >
+              }}>
                 {type}
               </span>
             );
@@ -128,7 +116,7 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
             <span className="result-meta-item">{date}</span>
           )}
         <div className="result-actions">
-            <button className="result-btn" onClick={handleViewDetails}>
+            <button className="result-btn" onClick={() => onSelect(result)}>
               View Details
             </button>
           <button className="result-btn" onClick={() => window.open(result.uri, '_blank')}>
@@ -143,8 +131,7 @@ const ResultCard: React.FC<{result: Result}> = ({result}) => {
 };
 
 // ── Result List ────────────────────────────────────────────
-
-const ResultList: React.FC = () => {
+const ResultList: React.FC<{onSelect: (result: Result) => void}> = ({onSelect}) => {
   const engine = useEngine();
 
   // Build the controller once
@@ -183,7 +170,7 @@ const ResultList: React.FC = () => {
   return (
     <section className="results-area">
       {resultState.results.map((result) => (
-        <ResultCard key={result.uniqueId} result={result} />
+        <ResultCard key={result.uniqueId} result={result} onSelect={onSelect} />
       ))}
     </section>
   );
