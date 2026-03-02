@@ -3,7 +3,7 @@ import { buildSearchBox } from '@coveo/headless';
 import { useEngine } from '../common/engineContext';
 
 const SearchBox: React.FC = () => {
-  const engine = useEngine();
+  const engine = useEngine(); 
 
   // Build the controller once — numberOfSuggestions enables Query Suggest
   const [controller] = useState(() =>
