@@ -115,7 +115,7 @@ const SearchBox: React.FC = () => {
         {searchBoxState.value && (
           <button
             className="search-clear"
-            style={{display: 'block'}}
+            style={{ display: 'block' }}
             onClick={handleClear}
             title="Clear search"
           >
